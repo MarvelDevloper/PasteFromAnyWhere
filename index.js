@@ -9,12 +9,17 @@ import cookieParser from 'cookie-parser'
 import { pasteRoute } from './route/paste.route.js'
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
+import cors from 'cors'
 
 // DB connection
 DBconnection()
 
-
 app.use(cookieParser())
+
+app.use(cors({
+    origin: "https://YOUR-FRONTEND.vercel.app",
+    credentials: true
+}));
 
 
 //for authentication(register and login)
