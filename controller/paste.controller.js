@@ -42,6 +42,16 @@ export const getPaste = async (req, res) => {
     });
 }
 
+export const getSharePaste = async (req, res) => {
+    const pasteId=req.params.pasteId
+    const pastes = await Paste.findById({pasteId})
+
+    if (paste.length == 0) {
+        return res.status(400).json({ success: false, msg: 'no paste found' })
+    }
+    return res.status(200).json({success: true,paste});
+}
+
 export const getSinglePaste = async (req, res) => {
     const paste = await Paste.findById(req.params.pasteId)
     if (paste.length == 0) {
