@@ -17,7 +17,7 @@ DBconnection()
 app.use(cookieParser())
 
 app.use(cors({
-    origin: "https://YOUR-FRONTEND.vercel.app",
+    origin: "https://paste-from-any-where-n6rbc5zk9-sanskar-sanas-projects.vercel.app",
     credentials: true
 }));
 
