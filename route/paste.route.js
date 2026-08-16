@@ -9,5 +9,5 @@ pasteRoute.delete('/delete/:pasteId',tokenVerify,ownerAuth,deletePaste)
 pasteRoute.patch('/update/:pasteId',tokenVerify,ownerAuth,updatePaste)
 pasteRoute.get('/get-all',tokenVerify,getPaste)
 pasteRoute.get('/get-single/:pasteId',tokenVerify,checkPrivacy,getPaste)
-pasteRoute.get('/get/:pasteId',getSharePaste)
+pasteRoute.get('/:pasteId',getSharePaste)
 
