@@ -1,5 +1,5 @@
 import express from 'express'
-import { createPaste, deletePaste, getPaste, updatePaste } from '../controller/paste.controller.js'
+import { createPaste, deletePaste, getPaste, getSharePaste, updatePaste } from '../controller/paste.controller.js'
 import { tokenVerify } from '../middleware/tokenVerify.js'
 import { checkPrivacy, ownerAuth } from '../middleware/ownerAuth.js'
 export const pasteRoute=express.Router()
