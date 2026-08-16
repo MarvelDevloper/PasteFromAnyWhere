@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/auth/:path*",
+      "destination": "https://YOUR-RENDER-BACKEND-URL.onrender.com/auth/:path*"
+    },
+    {
+      "source": "/paste/:path*",
+      "destination": "https://YOUR-RENDER-BACKEND-URL.onrender.com/paste/:path*"
+    }
+  ]
+}
