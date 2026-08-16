@@ -1,6 +1,14 @@
 {
   "rewrites": [
     {
+      "source": "/auth/:path*",
+      "destination": "https://pastefromanywhere.onrender.com/auth/:path*"
+    },
+    {
+      "source": "/paste/:path*",
+      "destination": "https://pastefromanywhere.onrender.com/paste/:path*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
