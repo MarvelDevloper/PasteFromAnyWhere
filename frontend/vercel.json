@@ -7,10 +7,6 @@
     {
       "source": "/paste/:path*",
       "destination": "https://pastefromanywhere.onrender.com/paste/:path*"
-    },
-    {
-      "source": "/((?!auth|paste).*)",
-      "destination": "/index.html"
     }
   ]
 }
