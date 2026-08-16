@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/auth/:path*",
-      "destination": "https://YOUR-RENDER-BACKEND-URL.onrender.com/auth/:path*"
+      "destination": "https://pastefromanywhere.onrender.com/auth/:path*"
     },
     {
       "source": "/paste/:path*",
-      "destination": "https://YOUR-RENDER-BACKEND-URL.onrender.com/paste/:path*"
+      "destination": "https://pastefromanywhere.onrender.com/paste/:path*"
     }
   ]
 }
