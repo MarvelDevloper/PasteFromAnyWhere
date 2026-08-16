@@ -1,16 +1,24 @@
-# React + Vite
+# Pastebin React Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Full-stack Pastebin React application built to consume the existing backend REST API with zero backend modifications.
 
-Currently, two official plugins are available:
+## Live Deployment Links
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- 🌐 **Live Frontend (Vercel)**: [https://paste-from-any-where-n6rbc5zk9-sanskar-sanas-projects.vercel.app](https://paste-from-any-where-n6rbc5zk9-sanskar-sanas-projects.vercel.app)
+- ⚙️ **Live Backend (Render)**: [https://pastefromanywhere.onrender.com](https://pastefromanywhere.onrender.com)
 
-## React Compiler
+## Pages & Routes
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- `/login`: User Authentication
+- `/register`: Account Registration
+- `/dashboard`: Manage pastes, filter by privacy, search, pagination
+- `/create`: Code editor with syntax and privacy options
+- `/paste/:pasteId`: Formatted code viewer with line numbers and copy tools
+- `/paste/:pasteId/edit`: Update existing paste
 
-## Expanding the Oxlint configuration
+## Development
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```bash
+npm install
+npm run dev
+```
