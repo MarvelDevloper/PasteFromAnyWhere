@@ -4,10 +4,12 @@ dotenv.config()
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { User } from '../model/user.model.js';
 
+const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "https://paste-from-any-where.vercel.app/google/auth/callback"
+    callbackURL: `${frontendUrl}/auth/google/callback`
   },
   async (accessToken, refreshToken, profile, cb) => {
     try {
