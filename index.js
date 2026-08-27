@@ -6,6 +6,7 @@ import { userRoute } from './route/user.route.js'
 import { redis } from './utils/redis.js'
 dotenv.config()
 import cookieParser from 'cookie-parser'
+import passport from 'passport'
 import { pasteRoute } from './route/paste.route.js'
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
@@ -22,7 +23,19 @@ app.use(cors({
 }));
 
 
+app.use(passport.initialize());
+
 //for authentication(register and login)
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile','email'] ,session:false}));
+
+// app.get('/auth/google/callback', 
+//   passport.authenticate('google', { failureRedirect: '/login' }),
+//   function(req, res) {
+//     // Successful authentication, redirect home.
+//     res.redirect('/');
+//   }
+// );
+
 app.use('/auth',userRoute)
 app.use('/paste',pasteRoute)
 

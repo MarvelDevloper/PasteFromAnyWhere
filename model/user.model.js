@@ -13,7 +13,7 @@ const userSchema=new mongoose.Schema({
     },
     password:{
         type:String,
-        required:true,
+        default:"abc",
         trim:true
     },
     role:{
@@ -25,12 +25,6 @@ const userSchema=new mongoose.Schema({
         type:Boolean,
         default:false
     },
-    emailVerificationToken:{
-        type:String,
-    },
-    emailVerificationExpires: {
-    type: Date
-  }
 },
 {
     timestamps:true

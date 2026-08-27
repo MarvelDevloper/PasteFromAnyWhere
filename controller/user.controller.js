@@ -3,7 +3,41 @@ import bcryptjs from 'bcryptjs'
 import { generateAccessToken, generateEmailToken, generateRefreshToken } from "../utils/emailToken.js"
 import { redis } from "../utils/redis.js"
 import path from "path"
+import { ref } from "process"
+import { session } from "passport"
 
+export const googleAuth = async () => {
+    passport.authenticate('google', { failureRedirect: '/login',session:false}),
+        async (req, res) => {
+            // Successful authentication, redirect home.
+            const access = await generateAccessToken()
+            const refresh = await generateRefreshToken()
+
+            await redis.set(
+                `refresh_token:${refreshToken}`,
+                existUser._id.toString(),
+                "EX",
+                7 * 24 * 60 * 60
+            );
+
+            res.cookie("accessToken", access, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                maxAge: 15 * 60 * 1000
+            });
+
+            res.cookie("refreshToken", refresh, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                path: "/auth/api/verifyRefresh",
+                maxAge: 7 * 24 * 60 * 60 * 1000
+            });
+
+            res.redirect('/dashboard');
+        }
+}
 export const register = async (req, res) => {
     const { name, email, password, role } = req.body
 
@@ -21,8 +55,8 @@ export const register = async (req, res) => {
         name, email, password: hashPassword, role: role || "user"
     })
 
-    user.emailVerificationToken = (await emailToken).toString()
-    user.emailVerificationExpires = new Date(Date.now() + 15 * 60 * 10000)
+    // user.emailVerificationToken = (await emailToken).toString()
+    // user.emailVerificationExpires = new Date(Date.now() + 15 * 60 * 10000)
 
     await user.save();
 
@@ -39,7 +73,7 @@ export const login = async (req, res) => {
         return res.status(400).json({ success: false, msg: 'email or password not found!' })
     }
 
-    const isValid = await bcryptjs.compare( password,existUser.password)
+    const isValid = await bcryptjs.compare(password, existUser.password)
 
     if (!isValid) {
         return res.status(400).json({ success: false, msg: 'email or password not found!' })
