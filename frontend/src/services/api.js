@@ -30,6 +30,41 @@ export const authApi = {
   verifyRefresh: () => api.get('/auth/api/verifyRefresh'),
 };
 
+let logoutHandler = null;
+
+export const setLogoutHandler = (handler) => {
+  logoutHandler = handler;
+};
+
+// Response interceptor to handle token refresh on 401 errors
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    
+    // Prevent infinite loop if refreshing fails or if refresh URL itself returns 401
+    if (error.response?.status === 401 && !originalRequest._retry && originalRequest.url !== '/auth/api/verifyRefresh') {
+      originalRequest._retry = true;
+      try {
+        const response = await authApi.verifyRefresh();
+        const newToken = response.data?.token;
+        if (newToken) {
+          localStorage.setItem('pastebin_token', newToken);
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+          return api(originalRequest);
+        }
+      } catch (refreshError) {
+        console.error('Session expired, auto-refresh failed:', refreshError);
+        if (logoutHandler) {
+          logoutHandler();
+        }
+        return Promise.reject(refreshError);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 // Paste Endpoints
 export const pasteApi = {
   create: (data) => api.post('/paste/create', data),

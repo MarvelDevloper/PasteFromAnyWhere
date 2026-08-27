@@ -297,8 +297,8 @@ const Login = () => {
           type="button"
           className="btn"
           onClick={() => {
-            window.location.href =
-              'https://paste-from-any-where.vercel.app/auth/google';
+            const apiBase = import.meta.env.VITE_API_URL || '';
+            window.location.href = `${apiBase}/auth/google`;
           }}
           style={{
             width: '100%',

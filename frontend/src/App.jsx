@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard';
 import CreatePaste from './pages/CreatePaste';
 import ViewPaste from './pages/ViewPaste';
 import EditPaste from './pages/EditPaste';
+import OAuthCallback from './pages/OAuthCallback';
 
 import './App.css';
 
@@ -29,6 +30,7 @@ function App() {
             <Route path="/" element={<HomeRedirect />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/oauth-callback" element={<OAuthCallback />} />
             
             {/* Protected Routes */}
             <Route

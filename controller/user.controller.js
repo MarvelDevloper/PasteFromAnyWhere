@@ -4,30 +4,35 @@ import { generateAccessToken, generateEmailToken, generateRefreshToken } from ".
 import { redis } from "../utils/redis.js"
 import path from "path"
 import { ref } from "process"
-import { session } from "passport"
+import passport from "passport"
 
-export const googleAuth = async () => {
-    passport.authenticate('google', { failureRedirect: '/login',session:false}),
-        async (req, res) => {
-            // Successful authentication, redirect home.
-            const access = await generateAccessToken()
-            const refresh = await generateRefreshToken()
+export const googleAuth = (req, res, next) => {
+    passport.authenticate('google', { failureRedirect: '/login', session: false }, async (err, user, info) => {
+        if (err || !user) {
+            console.error("Google authentication error:", err || "No user found");
+            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+            return res.redirect(`${frontendUrl}/login?error=google_auth_failed`);
+        }
+
+        try {
+            const accessToken = await generateAccessToken(user._id);
+            const refreshToken = await generateRefreshToken();
 
             await redis.set(
                 `refresh_token:${refreshToken}`,
-                existUser._id.toString(),
+                user._id.toString(),
                 "EX",
                 7 * 24 * 60 * 60
             );
 
-            res.cookie("accessToken", access, {
+            res.cookie("accessToken", accessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "lax",
                 maxAge: 15 * 60 * 1000
             });
 
-            res.cookie("refreshToken", refresh, {
+            res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "lax",
@@ -35,9 +40,15 @@ export const googleAuth = async () => {
                 maxAge: 7 * 24 * 60 * 60 * 1000
             });
 
-            res.redirect('/dashboard');
+            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+            return res.redirect(`${frontendUrl}/oauth-callback`);
+        } catch (error) {
+            console.error("Error in googleAuth callback handler:", error);
+            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+            return res.redirect(`${frontendUrl}/login?error=server_error`);
         }
-}
+    })(req, res, next);
+};
 export const register = async (req, res) => {
     const { name, email, password, role } = req.body
 
@@ -118,6 +129,10 @@ export const verifyRefreshToken = async (req, res) => {
             message: "Invalid or expired refresh token"
         });
     }
+
+    // Delete old refresh token to enforce rotation
+    await redis.del(`refresh_token:${refreshToken}`);
+
     const accessToken = await generateAccessToken(userId)
     const refresh = await generateRefreshToken(userId)
 
@@ -135,7 +150,7 @@ export const verifyRefreshToken = async (req, res) => {
         maxAge: 15 * 60 * 1000
     });
 
-    res.cookie("refreshToken", refreshToken, {
+    res.cookie("refreshToken", refresh, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",

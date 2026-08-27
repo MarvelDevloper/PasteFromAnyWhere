@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { setLogoutHandler } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -71,6 +72,11 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     showToast('Logged out successfully', 'info');
   };
+
+  useEffect(() => {
+    setLogoutHandler(logoutUser);
+    return () => setLogoutHandler(null);
+  }, []);
 
   return (
     <AuthContext.Provider
