@@ -7,7 +7,7 @@ import { User } from '../model/user.model.js';
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/auth/google/callback"
+    callbackURL: "https://paste-from-any-where.vercel.app/google/auth/callback"
   },
   async (accessToken, refreshToken, profile, cb) => {
     try {
